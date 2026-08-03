@@ -35,9 +35,10 @@ def authenticate_user(
         email: str,
         password: str
 ):
-    user = db.query(User).filter(
-        User.email == email
-    ).first()
+    user = get_user_by_email(
+        db,
+        email
+    )
 
     if not user:
         return None
@@ -49,3 +50,13 @@ def authenticate_user(
         return None
 
     return user
+
+def get_user_by_email(
+    db: Session,
+    email: str
+):
+    return (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
