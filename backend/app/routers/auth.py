@@ -8,8 +8,7 @@ from app.schemas.user import Token, UserCreate, UserLogin, UserResponse
 
 from fastapi import HTTPException
 
-from backend.app.services.auth_service import authenticate_user, create_access_token
-
+from app.services.auth_service import authenticate_user, create_access_token
 
 router = APIRouter(
     prefix="/auth",
