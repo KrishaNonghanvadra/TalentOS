@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.routers.auth import router as auth_router
 from app.routers import users
+from app.routers import profiles
 
 app = FastAPI(
     title="TalentOS API",
@@ -28,3 +29,4 @@ def health_check():
     }
 
 app.include_router(users.router)
+app.include_router(profiles.router)
