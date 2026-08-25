@@ -36,3 +36,61 @@ class StudentProfile(Base):
         "User",
         back_populates="student_profile"
     )
+
+    skills = relationship(
+        "StudentSkill",
+        back_populates="student_profile",
+        cascade="all, delete-orphan"
+    )
+
+from sqlalchemy import (
+    Column,
+    Integer,
+    Float,
+    ForeignKey
+)
+from sqlalchemy.orm import relationship
+
+from app.core.base import Base
+
+
+class StudentSkill(Base):
+    __tablename__ = "student_skills"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    student_profile_id = Column(
+        Integer,
+        ForeignKey("student_profiles.id"),
+        nullable=False
+    )
+
+    skill_id = Column(
+        Integer,
+        ForeignKey("skills.id"),
+        nullable=False
+    )
+
+    proficiency = Column(
+        Float,
+        nullable=False,
+        default=0
+    )
+
+    experience_months = Column(
+        Integer,
+        nullable=True
+    )
+
+    student_profile = relationship(
+        "StudentProfile",
+        back_populates="skills"
+    )
+
+    skill = relationship(
+        "Skill"
+    )
