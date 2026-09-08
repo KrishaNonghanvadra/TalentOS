@@ -7,6 +7,8 @@ from app.routers import profiles
 from app.routers import skills
 from app.routers import student_skills
 
+from app.routers.jobs import router as jobs_router
+
 app = FastAPI(
     title="TalentOS API",
     description="AI-Powered Career Intelligence & Placement Platform",
@@ -15,7 +17,6 @@ app = FastAPI(
 
 
 app.include_router(auth_router)
-
 
 @app.get("/")
 def root():
@@ -36,3 +37,5 @@ app.include_router(profiles.router)
 
 app.include_router(skills.router)
 app.include_router(student_skills.router)
+
+app.include_router(jobs_router)
