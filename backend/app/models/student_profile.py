@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
-from app.core.base import Base
+from app.core.database import Base
 
 
 class StudentProfile(Base):
@@ -42,17 +42,6 @@ class StudentProfile(Base):
         back_populates="student_profile",
         cascade="all, delete-orphan"
     )
-
-from sqlalchemy import (
-    Column,
-    Integer,
-    Float,
-    ForeignKey
-)
-from sqlalchemy.orm import relationship
-
-from app.core.base import Base
-
 
 class StudentSkill(Base):
     __tablename__ = "student_skills"
