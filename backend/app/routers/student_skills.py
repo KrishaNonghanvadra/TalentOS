@@ -23,71 +23,71 @@ router = APIRouter(
     tags=["Student Skills"]
 )
 
-@router.post(
-    "",
-    response_model=StudentSkillResponse,
-    status_code=201
-)
-def add_student_skill(
-    skill_data: StudentSkillCreate,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    profile = (
-        db.query(StudentProfile)
-        .filter(
-            StudentProfile.user_id == current_user.id
-        )
-        .first()
-    )
+# @router.post(
+#     "",
+#     response_model=StudentSkillResponse,
+#     status_code=201
+# )
+# def add_student_skill(
+#     skill_data: StudentSkillCreate,
+#     current_user: User = Depends(get_current_user),
+#     db: Session = Depends(get_db),
+# ):
+#     profile = (
+#         db.query(StudentProfile)
+#         .filter(
+#             StudentProfile.user_id == current_user.id
+#         )
+#         .first()
+#     )
 
-    if not profile:
-        raise HTTPException(
-            status_code=404,
-            detail="Student profile not found"
-        )
+#     if not profile:
+#         raise HTTPException(
+#             status_code=404,
+#             detail="Student profile not found"
+#         )
 
-    skill = (
-        db.query(Skill)
-        .filter(
-            Skill.id == skill_data.skill_id
-        )
-        .first()
-    )
+#     skill = (
+#         db.query(Skill)
+#         .filter(
+#             Skill.id == skill_data.skill_id
+#         )
+#         .first()
+#     )
 
-    if not skill:
-        raise HTTPException(
-            status_code=404,
-            detail="Skill not found"
-        )
+#     if not skill:
+#         raise HTTPException(
+#             status_code=404,
+#             detail="Skill not found"
+#         )
 
-    existing = (
-        db.query(StudentSkill)
-        .filter(
-            StudentSkill.student_profile_id == profile.id,
-            StudentSkill.skill_id == skill_data.skill_id
-        )
-        .first()
-    )
+#     existing = (
+#         db.query(StudentSkill)
+#         .filter(
+#             StudentSkill.student_profile_id == profile.id,
+#             StudentSkill.skill_id == skill_data.skill_id
+#         )
+#         .first()
+#     )
 
-    if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Student already has this skill"
-        )
+#     if existing:
+#         raise HTTPException(
+#             status_code=400,
+#             detail="Student already has this skill"
+#         )
 
-    student_skill = StudentSkill(
-        student_profile_id=profile.id,
-        skill_id=skill_data.skill_id,
-        proficiency=skill_data.proficiency,
-        experience_months=skill_data.experience_months
-    )
+#     student_skill = StudentSkill(
+#         student_profile_id=profile.id,
+#         skill_id=skill_data.skill_id,
+#         proficiency=skill_data.proficiency,
+#         experience_months=skill_data.experience_months
+#     )
 
-    db.add(student_skill)
-    db.commit()
-    db.refresh(student_skill)
+#     db.add(student_skill)
+#     db.commit()
+#     db.refresh(student_skill)
 
-    return student_skill
+#     return student_skill
 
 @router.post(
     "",
@@ -209,7 +209,7 @@ def update_student_skill(
             detail="Student profile not found"
         )
 
-        student_skill = (
+    student_skill = (
         db.query(StudentSkill)
         .filter(
             StudentSkill.id == skill_id,
@@ -224,7 +224,7 @@ def update_student_skill(
             detail="Student skill not found"
         )
 
-        update_data = skill_data.model_dump(
+    update_data = skill_data.model_dump(
         exclude_unset=True
     )
 
