@@ -4,6 +4,15 @@ from app.models.job import Job
 from app.models.job_requirement import JobRequirement
 from app.models.student_profile import StudentProfile
 
+def get_gap_priority(gap: float) -> str:
+    if gap >= 3:
+        return "High"
+
+    if gap >= 1:
+        return "Medium"
+
+    return "Low"
+
 
 def calculate_job_match(
     db: Session,
@@ -50,13 +59,18 @@ def calculate_job_match(
             })
 
         else:
+            gap = required_proficiency - student_proficiency
+            priority = get_gap_priority(gap)
 
             skill_gaps.append({
                 "skill": skill_name,
                 "student_proficiency": student_proficiency,
                 "required_proficiency": required_proficiency,
-                "gap": required_proficiency - student_proficiency
+                "gap": gap,
+                "priority": priority
             })
+
+    skill_gaps.sort(key=lambda x: x["gap"], reverse=True)
 
     total_requirements = len(requirements)
 

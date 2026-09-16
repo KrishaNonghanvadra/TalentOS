@@ -13,6 +13,7 @@ class SkillGap(BaseModel):
     student_proficiency: float
     required_proficiency: float
     gap: float
+    priority: str
 
 
 class JobMatchResponse(BaseModel):
