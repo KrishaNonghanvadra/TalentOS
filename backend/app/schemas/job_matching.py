@@ -22,7 +22,7 @@ class JobMatchResponse(BaseModel):
     company: str
 
     match_percentage: float
-    skill_readiness: float
+    skill_readliness: float
 
     matched_skills: List[SkillMatch]
     skill_gaps: List[SkillGap]
