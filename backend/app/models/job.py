@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Float
 from sqlalchemy.orm import relationship
 
-from app.core.database import Base
+from app.core.base import Base
 
 
 class Job(Base):

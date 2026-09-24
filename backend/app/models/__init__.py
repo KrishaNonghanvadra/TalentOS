@@ -7,6 +7,8 @@ from app.models.student_profile import StudentSkill
 from app.models.job import Job
 from app.models.job_requirement import JobRequirement
 
+from app.models.resume import Resume
+
 
 __all__ = [
     "User",
@@ -15,4 +17,5 @@ __all__ = [
     "StudentSkill",
     "Job",
     "JobRequirement",
+    "Resume",
 ]
