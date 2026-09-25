@@ -14,7 +14,9 @@ from app.models.resume import Resume
 from app.schemas.resume import ResumeResponse
 
 from app.services.resume_service import extract_text_from_pdf
+from app.services.resume_skill_service import extract_skills_from_resume
 
+from app.models.student_profile import StudentSkill
 
 router = APIRouter(
     prefix="/resumes",
@@ -135,3 +137,74 @@ async def upload_resume(
     db.refresh(resume)
 
     return resume
+
+@router.post("/extract-skills")
+def extract_resume_skills(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    student_profile = (
+        db.query(StudentProfile)
+        .filter(StudentProfile.user_id == current_user.id)
+        .first()
+    )
+
+    if not student_profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Student profile not found"
+        )
+
+    resume = (
+        db.query(Resume)
+        .filter(Resume.student_profile_id == student_profile.id)
+        .first()
+    )
+
+    if not resume:
+        raise HTTPException(
+            status_code=404,
+            detail="Resume not found"
+        )
+
+    extracted_skills = extract_skills_from_resume(
+        db,
+        student_profile.id,
+        resume.extracted_text or ""
+    )
+
+    added_skills = []
+    already_existing = []
+
+    for skill in extracted_skills:
+
+        existing_skill = (
+            db.query(StudentSkill)
+            .filter(
+                StudentSkill.student_profile_id == student_profile.id,
+                StudentSkill.skill_id == skill.id
+            )
+            .first()
+        )
+
+        if existing_skill:
+            already_existing.append(skill.name)
+            continue
+
+        student_skill = StudentSkill(
+            student_profile_id=student_profile.id,
+            skill_id=skill.id,
+            proficiency=0,
+            experience_months=None
+        )
+
+        db.add(student_skill)
+        added_skills.append(skill.name)
+
+    db.commit()
+
+    return {
+        "message": "Resume skills extracted successfully",
+        "skills": added_skills,
+        "already_existing": already_existing
+    }
