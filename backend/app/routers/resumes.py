@@ -18,6 +18,10 @@ from app.services.resume_skill_service import extract_skills_from_resume
 
 from app.models.student_profile import StudentSkill
 
+from app.services.resume_proficiency_service import (
+    estimate_skill_proficiency
+)
+
 router = APIRouter(
     prefix="/resumes",
     tags=["Resumes"]
@@ -188,17 +192,30 @@ def extract_resume_skills(
         )
 
         if existing_skill:
-            already_existing.append(skill.name)
+            proficiency = estimate_skill_proficiency(
+                skill.name,
+                resume.extracted_text or ""
+            )
+
+            if proficiency > existing_skill.proficiency:
+                existing_skill.proficiency = proficiency
+
             continue
+
+        proficiency = estimate_skill_proficiency(
+            skill.name,
+            resume.extracted_text or ""
+        )
 
         student_skill = StudentSkill(
             student_profile_id=student_profile.id,
             skill_id=skill.id,
-            proficiency=0,
+            proficiency=proficiency,
             experience_months=None
         )
 
         db.add(student_skill)
+        
         added_skills.append(skill.name)
 
     db.commit()
