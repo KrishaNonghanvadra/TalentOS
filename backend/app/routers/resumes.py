@@ -200,6 +200,8 @@ def extract_resume_skills(
             if proficiency > existing_skill.proficiency:
                 existing_skill.proficiency = proficiency
 
+            already_existing.append(skill.name)
+
             continue
 
         proficiency = estimate_skill_proficiency(

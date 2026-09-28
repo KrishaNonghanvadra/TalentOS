@@ -1,4 +1,4 @@
-import re
+from app.services.resume_section_service import parse_resume_sections
 
 
 def estimate_skill_proficiency(
@@ -6,51 +6,28 @@ def estimate_skill_proficiency(
     resume_text: str
 ) -> float:
 
-    text = resume_text.lower()
+    sections = parse_resume_sections(
+        resume_text
+    )
+
     skill = skill_name.lower()
 
-    if skill not in text:
-        return 0
+    score = 0
 
-    score = 2
+    # Skill explicitly listed
+    if skill in sections["skills"].lower():
+        score = 3
 
-    project_keywords = [
-        "project",
-        "developed",
-        "built",
-        "created",
-        "application",
-        "app",
-    ]
+    # Skill used in projects
+    if skill in sections["projects"].lower():
+        score += 2
 
-    experience_keywords = [
-        "experience",
-        "internship",
-        "worked",
-        "developer",
-        "engineer",
-    ]
+    # Skill used in experience
+    if skill in sections["experience"].lower():
+        score += 3
 
-    advanced_keywords = [
-        "architecture",
-        "deployment",
-        "optimization",
-        "production",
-        "api",
-        "scalable",
-        "microservices",
-    ]
-
-    for keyword in project_keywords:
-        if keyword in text:
-            score += 1
-
-    for keyword in experience_keywords:
-        if keyword in text:
-            score += 1
-
-    for keyword in advanced_keywords:
-        if keyword in text:
-            score += 1
+    # Skill mentioned in certifications
+    if skill in sections["certifications"].lower():
+        score += 1
 
     return min(score, 10)

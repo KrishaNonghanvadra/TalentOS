@@ -14,6 +14,7 @@ from app.routers.job_matching import router as job_matching_router
 from app.routers.job_recommendations import router as job_recommendation
 
 from app.routers import resumes
+from app.routers import github
 
 app = FastAPI(
     title="TalentOS API",
@@ -52,3 +53,4 @@ app.include_router(job_requirements_router)
 app.include_router(job_matching_router)
 
 app.include_router(resumes.router)
+app.include_router(github.router)
