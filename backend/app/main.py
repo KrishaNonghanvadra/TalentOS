@@ -15,15 +15,13 @@ from app.routers.job_recommendations import router as job_recommendation
 
 from app.routers import resumes
 from app.routers import github
+from app.routers import readiness
 
 app = FastAPI(
     title="TalentOS API",
     description="AI-Powered Career Intelligence & Placement Platform",
     version="0.1.0"
 )
-
-
-app.include_router(auth_router)
 
 @app.get("/")
 def root():
@@ -38,6 +36,8 @@ def health_check():
     return {
         "status": "healthy"
     }
+
+app.include_router(auth_router)
 
 app.include_router(users.router)
 app.include_router(profiles.router)
@@ -54,3 +54,4 @@ app.include_router(job_matching_router)
 
 app.include_router(resumes.router)
 app.include_router(github.router)
+app.include_router(readiness.router)
