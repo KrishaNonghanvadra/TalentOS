@@ -54,3 +54,42 @@ def match_student_with_job(
     )
 
     return result
+
+@router.get("/{job_id}/skill-gaps")
+def get_job_skill_gaps(
+    job_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    student_profile = (
+        db.query(StudentProfile)
+        .filter(StudentProfile.user_id == current_user.id)
+        .first()
+    )
+
+    if not student_profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Student profile not found"
+        )
+
+    job = db.query(Job).filter(Job.id == job_id).first()
+
+    if not job:
+        raise HTTPException(
+            status_code=404,
+            detail="Job not found"
+        )
+
+    result = calculate_job_match(
+        db,
+        student_profile,
+        job
+    )
+
+    return {
+        "job_id": result["job_id"],
+        "job_title": result["job_title"],
+        "company": result["company"],
+        "skill_gaps": result["skill_gaps"]
+    }
