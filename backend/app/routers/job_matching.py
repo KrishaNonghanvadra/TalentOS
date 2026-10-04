@@ -93,3 +93,4 @@ def get_job_skill_gaps(
         "company": result["company"],
         "skill_gaps": result["skill_gaps"]
     }
+
