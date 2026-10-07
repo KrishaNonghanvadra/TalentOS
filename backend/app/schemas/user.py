@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -9,6 +11,8 @@ class UserCreate(BaseModel):
         max_length=100,
         description="Password must contain at least 8 characters."
     )
+
+    role: Literal["student", "recruiter"] = "student"
 
 
 class UserResponse(BaseModel):

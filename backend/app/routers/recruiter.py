@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_recruiter
 
 from app.models.user import User
 
@@ -26,11 +26,12 @@ router = APIRouter(
 )
 def recruiter_search(
     request: RecruiterSearchRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_recruiter),
     db: Session = Depends(get_db)
 ):
 
     return search_candidates(
         db,
-        request.skills
+        request.skills,
+        request.minimum_match_percentage
     )

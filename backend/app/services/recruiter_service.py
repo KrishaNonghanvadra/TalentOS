@@ -7,7 +7,8 @@ from app.models.skill import Skill
 
 def search_candidates(
     db: Session,
-    required_skills
+    required_skills,
+    minimum_match_percentage: float = 0
 ):
     students = db.query(StudentProfile).all()
 
@@ -75,6 +76,9 @@ def search_candidates(
             total_score /
             len(required_skills)
         ) * 100
+
+        if match_percentage < minimum_match_percentage:
+            continue
 
         results.append({
             "student_profile_id": student.id,

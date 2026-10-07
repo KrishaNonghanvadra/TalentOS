@@ -13,6 +13,12 @@ class RecruiterSkillRequirement(BaseModel):
 class RecruiterSearchRequest(BaseModel):
     skills: List[RecruiterSkillRequirement]
 
+    minimum_match_percentage: float = Field(
+        default=0,
+        ge=0,
+        le=100
+    )
+
 
 class CandidateSkillMatch(BaseModel):
     skill_id: int
