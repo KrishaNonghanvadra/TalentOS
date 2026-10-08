@@ -18,6 +18,7 @@ from app.routers import github
 from app.routers import readiness
 from app.routers import roadmap
 from app.routers import recruiter
+from app.routers import admin
 
 app = FastAPI(
     title="TalentOS API",
@@ -59,3 +60,4 @@ app.include_router(github.router)
 app.include_router(readiness.router)
 app.include_router(roadmap.router)
 app.include_router(recruiter.router)
+app.include_router(admin.router)

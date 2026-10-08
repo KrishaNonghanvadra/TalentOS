@@ -12,7 +12,7 @@ class UserCreate(BaseModel):
         description="Password must contain at least 8 characters."
     )
 
-    role: Literal["student", "recruiter"] = "student"
+    role: Literal["student", "recruiter","admin"] = "student"
 
 
 class UserResponse(BaseModel):
