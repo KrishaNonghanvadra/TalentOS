@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Float
+from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.core.base import Base
@@ -25,4 +25,10 @@ class Job(Base):
         "JobRequirement",
         back_populates="job",
         cascade="all, delete-orphan"
+    )
+
+    recruiter_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True
     )
