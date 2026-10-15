@@ -23,6 +23,12 @@ from app.schemas.job_requirement import (
     JobRequirementUpdate
 )
 
+from app.schemas.recruiter import (
+    JobCandidateSearchRequest,
+    JobCandidateResult,
+)
+from app.services.recruiter_service import shortlist_candidates_for_job
+
 router = APIRouter(
     prefix="/recruiter",
     tags=["Recruiter"]
@@ -277,3 +283,35 @@ def delete_recruiter_job_requirement(
 
     db.delete(requirement)
     db.commit()
+
+
+@router.post(
+    "/jobs/{job_id}/shortlist",
+    response_model=list[JobCandidateResult]
+)
+def shortlist_job_candidates(
+    job_id: int,
+    request: JobCandidateSearchRequest,
+    current_user: User = Depends(get_current_recruiter),
+    db: Session = Depends(get_db)
+):
+    results = shortlist_candidates_for_job(
+        db=db,
+        job_id=job_id,
+        recruiter_id=current_user.id,
+        minimum_match_percentage=request.minimum_match_percentage
+    )
+
+    if results is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Job not found or you do not own this job"
+        )
+
+    if not results:
+        # An empty list can mean there are no requirements
+        # or no candidates met the minimum threshold.
+        return []
+
+    return results
+

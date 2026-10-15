@@ -37,3 +37,36 @@ class CandidateSearchResult(BaseModel):
     github_url: str | None
     match_percentage: float
     matched_skills: List[CandidateSkillMatch]
+
+
+class JobCandidateSkill(BaseModel):
+    skill_id: int
+    skill_name: str
+    student_proficiency: float
+    required_proficiency: float
+    score: float
+    gap: float
+
+
+class JobCandidateResult(BaseModel):
+    student_profile_id: int
+    full_name: str | None
+    college: str | None
+    branch: str | None
+    cgpa: float | None
+    github_url: str | None
+    match_percentage: float
+    matched_skills: List[JobCandidateSkill]
+    missing_skills: List[JobCandidateSkill]
+
+
+class JobCandidateSearchRequest(BaseModel):
+    minimum_match_percentage: float = Field(default=0, ge=0, le=100)
+
+class ShortlistRequest(BaseModel):
+    minimum_match_percentage: float = Field(
+        default=60,
+        ge=0,
+        le=100,
+        description="Minimum candidate match percentage"
+    )
